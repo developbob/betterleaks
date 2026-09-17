@@ -1,4 +1,4 @@
-ARG BUILDER_IMAGE=golang:1.24
+ARG BUILDER_IMAGE=golang:1.25
 ARG RUNTIME_IMAGE=alpine:3.22
 FROM ${BUILDER_IMAGE} AS build
 
@@ -13,7 +13,7 @@ CGO_ENABLED=0 go build -o bin/betterleaks \
   -ldflags "-s -w -X github.com/betterleaks/betterleaks/version.Version=${VERSION}"
 
 FROM ${RUNTIME_IMAGE}
-RUN apk add --no-cache bash git openssh-client
+RUN apk add --no-cache bash git openssh-client jq
 COPY --from=build /go/src/github.com/betterleaks/betterleaks/bin/* /usr/bin/
 
 RUN git config --global --add safe.directory '*'
